@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    let passwordStrength = 'Weak';
+    window.addEventListener('DOMContentLoaded', () => {
+      const passwordInput = document.getElementById('password');
+      const form = document.querySelector('form');
+      const registerBtn = document.querySelector('input[type="submit"]');
+      const weakMsg = document.getElementById('weak-password-msg');
+      const passwordStrengths = document.querySelectorAll('.password-strength');
+      const text = document.getElementById('text');
+
+      function updatePasswordGlow() {
+        const value = passwordInput.value;
+        let color = '#01dbc2';
+        if (value.length <= 4) {
+          color = '#ff2c1c';
+          passwordStrength = 'Weak';
+        } else if (value.length <= 8) {
+          color = '#ff9800';
+          passwordStrength = 'Medium';
+        } else {
+          color = '#12ff12';
+          passwordStrength = 'Strong';
+        }
+        passwordInput.style.boxShadow = `0 0 16px ${color}, 0 0 2px #111`;
+        passwordInput.style.borderColor = color;
+        if (registerBtn) {
+          registerBtn.disabled = passwordStrength === 'Weak';
+          registerBtn.style.opacity = passwordStrength === 'Weak' ? '0.5' : '1';
+          registerBtn.style.cursor = passwordStrength === 'Weak' ? 'not-allowed' : 'pointer';
+        }
+        if (weakMsg && passwordStrength !== 'Weak') {
+          weakMsg.style.display = 'none';
+        }
+        // Password strength UI
+        const strength = Math.min(value.length, 12);
+        const degree = strength * 30;
+        const gradientColor = strength <= 4 ? '#ff2c1c' : (strength <= 8 ? '#ff9800' : '#12ff12');
+        const strengthText = strength <= 4 ? 'Weak' : (strength <= 8 ? 'Medium' : 'Strong');
+        passwordStrengths.forEach(passwordStrength => {
+          passwordStrength.style.background =
+            `conic-gradient(${gradientColor} ${degree}deg, #1115 ${degree}deg)`;
+        });
+        if (text){
+          text.textContent = strengthText;
+          text.style.color = gradientColor;
+        }
+      }
+
+      passwordInput.addEventListener('input', updatePasswordGlow);
+      passwordInput.addEventListener('focus', updatePasswordGlow);
+      passwordInput.addEventListener('blur', () => {
+        passwordInput.classList.remove('active');
+        passwordInput.style.boxShadow = '0 0 8px #01dbc2, 0 0 2px #111';
+        passwordInput.style.borderColor = '#111';
+      });
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          if (passwordStrength === 'Weak') {
+            e.preventDefault();
+            if (weakMsg) {
+              weakMsg.textContent = 'Пароль слишком слаб!';
+              weakMsg.style.display = 'block';
+            }
+            return;
+          }
+          e.preventDefault();
+          if (weakMsg) weakMsg.style.display = 'none';
+          window.location.href = 'login.html';
+        });
+      }
+      updatePasswordGlow();
+    });
+  </script>
+  <style>
+    .snake-border {
+      position: relative;
+    }
+    .snake-border:after {
+      content: '';
+      position: absolute;
+      left: -4px; top: -4px; right: -4px; bottom: -4px;
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 2;
+      border: 2px solid transparent;
+      background: linear-gradient(90deg, #ff2c1c, #ff9800, #12ff12, #01dbc2, #ff2c1c);
+      background-size: 400% 400%;
+      animation: snakeMove 2s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .snake-border.active:after {
+      opacity: 1;
+    }
+    @keyframes snakeMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+  </style>
+  <script>
+    function updatePasswordGlow() {
+      const passwordInput = document.getElementById('password');
+      const value = passwordInput.value;
+      let color = '#01dbc2';
+      if (value.length <= 4) color = '#ff2c1c';
+      else if (value.length <= 8) color = '#ff9800';
+      else color = '#12ff12';
+      passwordInput.style.boxShadow = `0 0 16px ${color}, 0 0 2px #111`;
+      passwordInput.style.borderColor = color;
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const passwordInput = document.getElementById('password');
+      passwordInput.addEventListener('input', updatePasswordGlow);
+      passwordInput.addEventListener('focus', updatePasswordGlow);
+      passwordInput.addEventListener('blur', () => {
+        passwordInput.style.boxShadow = '0 0 8px #01dbc2, 0 0 2px #111';
+        passwordInput.style.borderColor = '#111';
+      });
+    });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .inputBx input {
+      border: 2px solid #111 !important;
+      background: transparent;
+      color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 0 8px #01dbc2, 0 0 2px #111;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .inputBx input:focus {
+      border-color: #01dbc2 !important;
+      box-shadow: 0 0 16px #01dbc2, 0 0 2px #111;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div id="weak-password-msg" style="display:none;color:#ff2c1c;text-align:center;margin-bottom:10px;font-size:1em;"></div>
+    <form>
+      <h2>Signup</h2>
+      <div class="inputBx">
+        <input type="text" placeholder="Username" required>
+      </div>
+      <div class="inputBx">
+        <input type="email" placeholder="Email" required>
+      </div>
+      <div class="inputBx">
+         <input type="password" id="password" placeholder="Password" required class="snake-border">
+  <script>
+    function updatePasswordGlow() {
+      const passwordInput = document.getElementById('password');
+      if (passwordInput.value.length > 0) {
+        passwordInput.classList.add('active');
+      } else {
+        passwordInput.classList.remove('active');
+      }
+      let color = '#01dbc2';
+      if (passwordInput.value.length <= 4) color = '#ff2c1c';
+      else if (passwordInput.value.length <= 8) color = '#ff9800';
+      else color = '#12ff12';
+      passwordInput.style.boxShadow = `0 0 16px ${color}, 0 0 2px #111`;
+      passwordInput.style.borderColor = color;
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const passwordInput = document.getElementById('password');
+      passwordInput.addEventListener('input', updatePasswordGlow);
+      passwordInput.addEventListener('focus', updatePasswordGlow);
+      passwordInput.addEventListener('blur', () => {
+        passwordInput.classList.remove('active');
+        passwordInput.style.boxShadow = '0 0 8px #01dbc2, 0 0 2px #111';
+        passwordInput.style.borderColor = '#111';
+      });
+    });
+  </script>
+      </div>
+      <div style="margin-bottom:15px;">
+        <h3 style="color:white; font-weight:400; font-size:14px; margin:0 0 8px 0;">
+          Password Strength: <span id="text"></span>
+        </h3>
+        <div class="password-strength"></div>
+        <div class="password-strength"></div>
+        <div class="password-strength"></div>
+      </div>
+      <div class="inputBx">
+  <input type="submit" value="Register">
+      </div>
+      <div class="group">
+        <a href="login.html">Back to Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const passwordStrengths = document.querySelectorAll('.password-strength');
+    const text = document.getElementById('text');
+
+    passwordInput.addEventListener('input', function(event) {
+      const password = event.target.value;
+      const strength = Math.min(password.length, 12);
+      const degree = strength * 30;
+      const gradientColor = strength <= 4 ? '#ff2c1c' : (strength <= 8 ? '#ff9800' : '#12ff12');
+      const strengthText = strength <= 4 ? 'Weak' : (strength <= 8 ? 'Medium' : 'Strong');
+
+      passwordStrengths.forEach(passwordStrength => {
+        passwordStrength.style.background =
+          `conic-gradient(${gradientColor} ${degree}deg, #1115 ${degree}deg)`;
+      });
+
+      if (text){
+        text.textContent = strengthText;
+        text.style.color = gradientColor;
+      }
+    });
+  </script>
+</body>
+</html>
